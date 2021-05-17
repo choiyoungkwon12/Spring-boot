@@ -1,6 +1,7 @@
 package com.web.community.domain;
 
 import com.web.community.domain.enums.SocialType;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

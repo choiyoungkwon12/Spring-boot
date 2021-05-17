@@ -1,0 +1,64 @@
+package com.web.community.config;
+
+import com.web.community.oauth.ClientResources;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
+
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        http.
+                authorizeRequests()
+                    .antMatchers("/", "/login/**", "/css/**", "/images/**", "/js/**", "/console/**").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .headers().frameOptions().sameOrigin() // disable() : 거부 / sameOrigin() : 동일한 도메인에서는 iframe 접근 가능
+                .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                .and()
+                    .formLogin()
+                    .successForwardUrl("/board/list")
+                .and()
+                    .logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/")
+                    .deleteCookies("JSESSIONID")
+                    .invalidateHttpSession(true)
+                .and()
+                    .addFilterBefore(filter, CsrfFilter.class)
+                    .csrf().disable();
+    }
+
+    @Bean
+    @ConfigurationProperties("facebook")
+    public ClientResources facebook() {
+        return new ClientResources();
+    }
+
+    @Bean
+    @ConfigurationProperties("google")
+    public ClientResources google() {
+        return new ClientResources();
+    }
+
+    @Bean
+    @ConfigurationProperties("kakao")
+    public ClientResources kakao() {
+        return new ClientResources();
+    }
+
+}
