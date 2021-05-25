@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
     @GetMapping("/login")
     public String login() {
-        return login();
+        return "login";
     }
 
     @GetMapping(value = "/{facebook|kakao|google}/complete")
     public String loginComplete(@SocialUser User user) {
         return "redirect:/board/list";
     }
+
     /*@GetMapping(value = "/{facebook|kakao|google}/complete")
     public String loginComplete(HttpSession session) {
         OAuth2Authentication authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();

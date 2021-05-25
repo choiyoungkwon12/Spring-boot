@@ -21,12 +21,12 @@ import java.util.stream.IntStream;
 @SpringBootApplication
 public class DemoApplication extends WebMvcConfigurerAdapter {
 
+    @Autowired
+    private UserArgumentResolver userArgumentResolver;
+
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
-
-    @Autowired
-    private UserArgumentResolver userArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
@@ -34,10 +34,10 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository) throws Exception {
-        return args -> {
+    public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository) {
+        return (args) -> {
             User user = userRepository.save(User.builder()
-                    .name("have")
+                    .name("havi")
                     .password("test")
                     .email("havi@gmail.com")
                     .createdDate(LocalDateTime.now())
@@ -45,14 +45,13 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 
             IntStream.rangeClosed(1, 200).forEach(index ->
                     boardRepository.save(Board.builder()
-                            .title("게시글" + index)
-                            .subTitle("순서" + index)
-                            .content("콘텐츠")
+                            .title("게시글"+index)
+                            .subTitle("순서"+index)
+                            .content("컨텐츠")
                             .boardType(BoardType.free)
                             .createdDate(LocalDateTime.now())
                             .updateDate(LocalDateTime.now())
-                            .user(user)
-                            .build())
+                            .user(user).build())
             );
         };
     }

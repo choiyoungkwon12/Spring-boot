@@ -45,6 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests()
                 .antMatchers("/", "/login/**", "/css/**", "/images/**", "/js/**", "/console/**").permitAll()
                 .anyRequest().authenticated()
+                .antMatchers("/facebook").hasAnyAuthority(FACEBOOK.getRoleType())
+                .antMatchers("/google").hasAnyAuthority(GOOGLE.getRoleType())
+                .antMatchers("/kakao").hasAnyAuthority(KAKAO.getRoleType())
                 .and()
                 .headers().frameOptions().disable() // disable() : 거부 / sameOrigin() : 동일한 도메인에서는 iframe 접근 가능
                 .and()
@@ -86,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Filter oauth2Filter(ClientResources clientResources, String path, SocialType socialType) {
 
         //인증이 수행될 경로를 넣어 OAuth2 클라이언트용 인증처리 필터를 생성
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);\
+        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
 
         //권한 서버와의 통신을 위해 OAuth2RestTemplate을 생성합니다.
         OAuth2RestTemplate template = new OAuth2RestTemplate(clientResources.getClient(), oAuth2ClientContext);
@@ -98,7 +101,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setTokenServices(new UserTokenService(clientResources, socialType));
 
         // 인증이 성공적으로 이루어지면 필터에 리다이렉트될 URL을 설정합니다.
-        filter.setAuthenticationSuccessHandler((request, response, authentication) -> response.sendRedirect("/" + socialType.getValue() + "/complete"));
+        filter.setAuthenticationSuccessHandler(
+                (request, response, authentication) -> response.sendRedirect("/" + socialType.getValue() + "/complete"));
         // 인증이 실패하면 이필터에 리다이렉트될 URL을 설정합니다.
         filter.setAuthenticationFailureHandler((request, response, exception) -> response.sendRedirect("/error"));
         return filter;
