@@ -12,7 +12,8 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping(value = "/{facebook|kakao|google}/complete")
+    /*@GetMapping(value = "/{facebook|kakao|google}/complete")*/
+    @GetMapping("/loginSuccess")
     public String loginComplete(@SocialUser User user) {
         return "redirect:/board/list";
     }

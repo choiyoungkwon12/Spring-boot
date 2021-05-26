@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BoardService {
 
-/*    private final BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
 
     public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -23,9 +23,9 @@ public class BoardService {
 
     public Board findBoardByIdx(Long idx){
         return boardRepository.findById(idx).orElse(new Board());
-    }*/
+    }
 
-    private final BoardRepository boardRepository;
+/*    private final BoardRepository boardRepository;
 
     public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -42,5 +42,5 @@ public class BoardService {
 
     public Board saveAndUpdateBoard(Board board) {
         return boardRepository.save(board);
-    }
+    }*/
 }

@@ -28,7 +28,8 @@
 <script>
     $('.btn-social').click(function () {
         var socialType = $(this).data('social');
-        location.href = "/login/" + socialType;
+        /*location.href = "/login/" + socialType;*/
+        location.href = "/oauth2/authorization/"+socialType;
     });
 </script>
 </body>
